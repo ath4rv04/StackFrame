@@ -3,7 +3,7 @@
 
 //Queries to get data. Mutations to write data
 
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { authComponent } from "./auth";
 
@@ -23,5 +23,14 @@ export const createPost = mutation({
         authId: user._id, //id is authomatically assigned in convex
     });
     return blogArticle;
+  },
+});
+
+export const getPost = query({
+  args: {},
+  handler: async (ctx) => {
+    const posts = await ctx.db.query("posts").order("desc").collect(); 
+
+    return posts;
   },
 });

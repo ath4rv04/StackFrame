@@ -31,19 +31,11 @@ export default function createRoute() {
 
     function onSubmit(values: z.infer<typeof blogSchema>) {
         startTransition( async () => {
-            // mutation({
-            //     body: values.content,
-            //     title: values.title,
-            // });
         
-
         console.log("This runs on client side");
 
-        await createBlog(); //server action - this will run on the server side
-
-        toast.success("Post created successfully");
-        router.push("/");
-        })
+        await createBlog(values); //server action - this will run on the server side
+        });
     }
 
     return (
