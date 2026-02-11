@@ -2,7 +2,6 @@
 
 import { Loader2, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { signUpSchema } from "@/app/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { CommentSchema } from "@/app/schemas/comment";
@@ -46,7 +45,7 @@ export function CommentSection() {
     }
     return (
         <Card>
-            <CardHeader className="flex flex-row items-center gap-2 border=b">
+            <CardHeader className="flex flex-row items-center gap-2 border-b">
                 <MessageSquare className="size-5"/>
                 <h2 className="text-xl font-bold">5 comments</h2>
             </CardHeader>
