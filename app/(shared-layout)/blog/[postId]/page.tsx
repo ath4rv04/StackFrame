@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { CommentSection } from "@/components/web/commentSection";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { fetchQuery } from "convex/nextjs";
+import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,7 +17,12 @@ interface postIdRouteProps {
 export default async function PostIdRoute({params} : postIdRouteProps) {
     const { postId } = await params;
 
-    const post = await fetchQuery(api.posts.getPostById, { postId : postId });
+    const [post, preloadedComments] = await Promise.all ([
+        await fetchQuery(api.posts.getPostById, { postId : postId }),
+        await preloadQuery(api.comments.getCommentsByPostId, {
+            postId: postId,
+        }),
+    ]) //perfomance optimization. they will run in parallel
     
     if(!post) {
         return <div><h1 className="text-6xl font-extrabold text-red-500 p-20">No Post</h1></div>
@@ -53,7 +58,17 @@ export default async function PostIdRoute({params} : postIdRouteProps) {
         
             <Separator className="my-8"/>
 
-            <CommentSection />
+            <CommentSection preloadedComments={preloadedComments}/>
         </div>
     );
 }
+
+//here we fetch the data then we pass this in the comment section as a prop which is a client componenet
+//it uses the preloaded query hook with args as the preloaded comments but it also subscribes to all new data changes
+//it gets the new data instanltly. through this we can enable ssr as well as reactivity
+
+//fetchQuery does not provide reactivity
+
+//convex automatically caches the res of query functions. Everything is consisted => realtime functionality
+//all this is provided by the websocket connections
+//Convex client libraries keep your frontend synced with the results of your server functions.
