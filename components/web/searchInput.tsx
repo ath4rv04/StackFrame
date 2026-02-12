@@ -19,39 +19,64 @@ export function SearchInput() {
     }
 
     return (
-        <div className="relative w-full max-w-sm z-index-10">
-            <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
-                <Input type="search" placeholder="Search posts..." className="w-full pl-8 bg-background" value={term} onChange={handleInputChange}/>
-            </div>
+        <div className="relative w-full max-w-sm z-100 search-container">
+  <div className="relative">
+    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+    <Input
+      type="search"
+      placeholder="Search..."
+      value={term}
+      onChange={handleInputChange}
+      className="w-full pl-9 bg-muted/40 border-border focus-visible:ring-primary/40"
+    />
+  </div>
 
-            {open && term.length >= 2 && (
-                <div className="absolute top-full mt-2 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95">
-                    {results === undefined ? (
-                        <div className="flex items-center justify-center text-sm text-muted-foreground p-4">
-                            <Loader2 className="mr-2 animate-spin size-4" />
-                            Searching...
-                        </div>
-                    ) : results.length === 0 ? (
-                        <p className="p-4 text-sm text-muted-foreground text-center">No results found!</p>
-                    ) : (
-                        <div className="py-1">
-                            {results.map((post) => (
-                                <Link 
-                                onClick={() => {
-                                    setOpen(false);
-                                    setTerm("");
-                                }}
-                                className="flex flex-col px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                                href={`/blog/${post._id}`} key={post._id} >
-                                    <p className="font-medium truncate">{post.body}</p>
-                                    <p className="text-xs text-muted-foreground pt-1">{post.title.substring(0,60)}</p>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            )}
+  {open && term.length >= 2 && (
+    <div
+      className="
+        absolute top-full mt-2 w-full
+        rounded-2xl
+        border border-border
+        bg-background
+        shadow-xl
+        overflow-hidden
+      "
+    >
+      {results === undefined ? (
+        <div className="flex items-center justify-center text-sm text-muted-foreground p-4">
+          <Loader2 className="mr-2 animate-spin size-4" />
+          Searching...
         </div>
+      ) : results.length === 0 ? (
+        <p className="p-4 text-sm text-muted-foreground text-center">
+          No results found
+        </p>
+      ) : (
+        <div className="divide-y divide-border/40">
+          {results.map((post) => (
+            <Link
+              key={post._id}
+              href={`/blog/${post._id}`}
+              onClick={() => {
+                setOpen(false);
+                setTerm("");
+              }}
+              className="block px-4 py-3 hover:bg-muted/50 transition-colors"
+            >
+              <p className="font-medium truncate">
+                {post.body}
+              </p>
+              <p className="text-xs text-muted-foreground pt-1 line-clamp-2">
+                {post.title}
+              </p>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )}
+</div>
+
+
     )
 }

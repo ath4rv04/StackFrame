@@ -39,64 +39,121 @@ export default function createRoute() {
     }
 
     return (
-        <div className="py-12">
-            <div className="text-center mb-12">
-                <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl" >Create Post</h1>
-                <p className="text-xl text-muted-foreground pt-4">Share your thoughts here</p>
-            </div>
+  <div className="py-24">
+    
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-8">
+      
+      {/* Header */}
+      <div className="space-y-3">
+        <h1 className="text-3xl font-semibold tracking-tight">
+          New article
+        </h1>
+        <p className="text-muted-foreground">
+          Write something structured.
+        </p>
+      </div>
 
-            <Card className="w-full max-w-xl mx-auto">
-                <CardHeader>
-                    <CardTitle>Create Blog Article</CardTitle>
-                    <CardDescription>Create a new blog article</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <FieldGroup className="gap-y-4">
-                            <Controller name ="title" control={form.control} render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Enter Title</FieldLabel>
-                                <Input aria-invalid = {fieldState.invalid} placeholder="" {...field} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
-                        <Controller name ="content" control={form.control} render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Type your content</FieldLabel>
-                                <Textarea aria-invalid = {fieldState.invalid} placeholder="" {...field} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
-                        <Controller name ="image" control={form.control} render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Image</FieldLabel>
-                                <Input aria-invalid = {fieldState.invalid} placeholder="" type="file" accept="image/*" onChange={(event) => {
-                                    const file = event?.target.files?.[0];
-                                    field.onChange(file);
-                                }}/>
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
-                        <Button disabled = {isPending}>{isPending ? (
-                            <>
-                                <Loader2 className="size-4 animate-spin" />
-                                <span>Creating Post...</span>
-                            </>
-                        ) : (
-                            <span>Create Post</span>
-                        )}</Button>
-                        </FieldGroup>
-                    </form>
-                </CardContent>
-            </Card>
+      {/* Form */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        
+        <Controller
+          name="title"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <div className="space-y-2">
+              <Input
+                {...field}
+                placeholder="Title"
+                className="
+                    text-3xl 
+                    font-semibold 
+                    bg-transparent 
+                    border-none 
+                    px-0 
+                    focus-visible:ring-0 
+                    placeholder:text-muted-foreground/50
+                    
+                "
+                />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </div>
+          )}
+        />
+
+        <Controller
+          name="content"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <div className="space-y-2">
+              <Textarea
+                {...field}
+                placeholder="Start writing..."
+                className="
+                    min-h-60
+                    resize-none
+                    bg-transparent
+                    border-none
+                    px-0
+                    text-base
+                    leading-relaxed
+                    focus-visible:ring-0
+                    placeholder:text-muted-foreground/50
+                "
+                />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </div>
+          )}
+        />
+
+        <Controller
+          name="image"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <div className="space-y-2">
+              <Input
+                onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    field.onChange(file ?? null);
+                }}
+                type="file"
+                accept="image/*"
+                className="
+                    text-sm
+                    border border-border
+                    bg-muted/30
+                    hover:bg-muted/50
+                    transition-colors
+                "
+                />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </div>
+          )}
+        />
+
+        <div className="pt-10 border-t border-border">
+            <Button size="sm" disabled={isPending}>
+                {isPending ? (
+                <>
+                    <Loader2 className="size-4 animate-spin mr-2" />
+                    Publishing...
+                </>
+                ) : (
+                "Publish article"
+                )}
+            </Button>
         </div>
-    )
+
+      </form>
+
+    </div>
+  </div>
+);
 }
 
 //file upload => client send upload req to sever which create api call to convex.

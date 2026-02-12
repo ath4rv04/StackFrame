@@ -58,67 +58,85 @@ export function CommentSection(props: {
         return <p>Loading...</p>
     }
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center gap-2 border-b">
-                <MessageSquare className="size-5"/>
-                <h2 className="text-xl font-bold">{data.length} Comments</h2>
-            </CardHeader>
+        <div className="border-border pt-8">
 
-            <CardContent className="space-y-8">
-                <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-                    <Controller
-                        name ="body"
-                        control={form.control}
-                        render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Enter your comment here</FieldLabel>
-                                <Textarea
-                                    aria-invalid = {fieldState.invalid}
-                                    placeholder="Share your thoughts"
-                                    {...field} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
+        <div className="flex items-center gap-2 mb-8">
+            <MessageSquare className="size-4 text-muted-foreground" />
+            <h2 className="text-lg font-semibold tracking-tight">
+            {data.length} comments
+            </h2>
+        </div>
 
-                        <Button disabled = {isPending}>{isPending ? (
-                            <>
-                                <Loader2 className="size-4 animate-spin" />
-                                <span>Loading...</span>
-                            </>
-                        ) : (
-                            <span>Submit</span>
-                        )}</Button>
-                </form>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mb-10">
+            
+            <Controller
+            name="body"
+            control={form.control}
+            render={({ field, fieldState }) => (
+                <div className="space-y-2">
+                <Textarea
+                    {...field}
+                    placeholder="Write a comment..."
+                    aria-invalid={fieldState.invalid}
+                    className="min-h-24 resize-none"
+                />
+                {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                )}
+                </div>
+            )}
+            />
 
-                {data?.length > 0 && <Separator />}
-                <section className="space-y-6">
-                        {data?.map((comment) => (
-                            <div key={comment._id} className="flex gap-4">
-                                <Avatar className="size-10 shrink-0">
-                                    <AvatarImage
-                                        src={`https://avatar.vercel.sh/${comment.authorName}`}
-                                        alt={comment.authorName}
-                                    />
-                                    <AvatarFallback>
-                                        {comment.authorName.slice(0, 2).toUpperCase()}
-                                    </AvatarFallback>
-                                </Avatar>
+            <div className="flex justify-end">
+            <Button size="sm" disabled={isPending}>
+                {isPending ? (
+                <>
+                    <Loader2 className="size-4 animate-spin mr-2" />
+                    Posting...
+                </>
+                ) : (
+                "Post comment"
+                )}
+            </Button>
+            </div>
 
-                                <div className="flex-1 space-y-1">
-                                    <div className="flex items-center justify-between">
-                                        <p className="font-semibold text-sm">{comment.authorName}</p>
-                                        <p className="text-muted-foreground text-xs">{new Date(comment._creationTime).toLocaleDateString("en-US")}</p>
-                                    </div>
+        </form>
 
-                                    <p className="text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">{comment.body}</p>
-                                </div>
-                            </div>
-                        ))}
-                </section>
-            </CardContent>
-        </Card>
+        <section className="space-y-8">
+            {data.map((comment) => (
+            <div key={comment._id} className="flex gap-4 pb-6 border-b border-border/40 last:border-0">
+                
+                <Avatar className="size-9 shrink-0">
+                <AvatarImage
+                    src={`https://avatar.vercel.sh/${comment.authorName}`}
+                    alt={comment.authorName}
+                />
+                <AvatarFallback>
+                    {comment.authorName.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 space-y-1">
+                <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium">
+                    {comment.authorName}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                    {new Date(comment._creationTime).toLocaleDateString()}
+                    </p>
+                </div>
+
+                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {comment.body}
+                </p>
+                </div>
+
+            </div>
+            ))}
+        </section>
+
+        </div>
+
     )
 }
 

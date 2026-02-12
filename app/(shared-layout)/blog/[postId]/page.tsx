@@ -54,9 +54,25 @@ export default async function PostIdRoute({params} : postIdRouteProps) {
         return redirect("/auth/login"); //multi layer authorization. This never fails. Server side check never fails
     }
 
-    if(!post) {
-        return <div><h1 className="text-6xl font-extrabold text-red-500 p-20">No Post</h1></div>
+    if (!post) {
+        return (
+            <div className="py-24 text-center space-y-6">
+            <h1 className="text-3xl font-semibold tracking-tight">
+                Post not found
+            </h1>
+            <p className="text-muted-foreground text-sm">
+                The article you’re looking for doesn’t exist or has been removed.
+            </p>
+            <Link
+                href="/"
+                className="inline-flex items-center text-sm font-medium text-primary"
+            >
+                Return home →
+            </Link>
+            </div>
+        );
     }
+
     return (
         <div className="max-w-3xl mx-auto py-8 px-4 animate-in fade-in
         duration-500 relative">

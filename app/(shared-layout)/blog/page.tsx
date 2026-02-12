@@ -19,66 +19,101 @@ import { cacheLife, cacheTag } from "next/cache";
 //^^ this wont work with cached components
  
 export const metadata: Metadata = {
-  title: "Blog | Next.js 16 Tutorial",
-  description: "Read our latest articles and insights",
-  category: "web development",
-  authors: [{name: "Atharv Shawrikar"}],
+  title: "Blog",
+  description: "Essays and technical notes from Stackframe.",
+  category: "technology",
+  authors: [{ name: "Stackframe" }],
 }; //static metadata
 
 export default function blog() {
     
     return(
         <div className="py-12">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6">
+
             <div className="text-center pb-12">
-                <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Our Blog</h1>
-                <p className="pt-4 max-w-2xl mx-auto text-xl text-muted-foreground">Insights, thoughts, and trends from our team.</p>
+                <h1 className="text-3xl font-semibold tracking-tight">Writing</h1>
+                <p className="text-muted-foreground">
+                    Essays, notes, and structured thoughts on development.
+                </p>
+
             </div>
             {/* <Suspense fallback={
                 <SkeletonLoading/>
             }> */}
                 <LoadBlog />
             {/* </Suspense> */}
+            </div>
         </div>
     ); // data is being fetched on the client side thats why we dont see it in the first time
 }
 
 async function LoadBlog() {
-    "use cache";
-    cacheLife("hours");
-    cacheTag("blog");
-    const data = await fetchQuery(api.posts.getPost);
+  "use cache";
+  cacheLife("hours");
+  cacheTag("blog");
 
+  const data = await fetchQuery(api.posts.getPost);
+
+  if (!data || data.length === 0) {
     return (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {data?.map((post) => (
-                    <Card key = {post._id} className="pt-0">
-                        <div className="relative h-48 w-full overflow-hidden">
-                            <Image
-                            src={post.imageUrl ?? "https://images.unsplash.com/photo-1770106678115-ec9aa241cdf6?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} alt="image" 
-                            fill 
-                            
-                            className="rounded-t-lg object-cover"/>
-                        </div>
+      <div className="text-center py-20 space-y-4">
+        <p className="text-lg font-medium">
+          No articles published yet.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Be the first to share a structured thought.
+        </p>
+        <Link
+          href="/create"
+          className="inline-flex items-center text-sm font-medium text-primary"
+        >
+          Write your first article →
+        </Link>
+      </div>
+    );
+  }
 
-                        <CardContent>
-                            <Link href={`/blog/${post._id}`}>
-                                <h1 className="text-2xl font-bold hover:text-primary">{post.body}</h1>
-                            </Link>
-                            <p className="text-muted-foreground line-clamp-3">{post.title}</p>
-                        </CardContent>
-
-                        <CardFooter>
-                            <Link className={buttonVariants({
-                                className: 'w-full',
-                            })} href={`/blog/${post._id}`}>
-                                Read More
-                            </Link>
-                        </CardFooter>
-                    </Card>
-                ))}
+  return (
+    <div className="space-y-16">
+      {data?.map((post) => (
+        <article key={post._id} className="group space-y-4">
+          
+          {post.imageUrl && (
+            <div className="relative w-full aspect-video overflow-hidden rounded-xl border border-border">
+              <Image
+                src={post.imageUrl}
+                alt={post.body}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              />
             </div>
-    )
+          )}
+
+          <div className="space-y-2 max-w-2xl">
+            <Link href={`/blog/${post._id}`}>
+              <h2 className="text-2xl font-medium tracking-tight group-hover:text-primary transition-colors">
+                {post.body}
+              </h2>
+            </Link>
+
+            <p className="text-muted-foreground line-clamp-3 leading-relaxed">
+              {post.title}
+            </p>
+
+            <Link
+              href={`/blog/${post._id}`}
+              className="text-sm text-primary"
+            >
+              Read article →
+            </Link>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
 }
+
 
 function SkeletonLoading() {
     return (

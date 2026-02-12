@@ -13,8 +13,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
-export default function loginPage() {
+export default function LoginPage() {
     const [isPending, startTransition] = useTransition()
     const router = useRouter();
     const form = useForm({
@@ -34,7 +35,7 @@ export default function loginPage() {
                 fetchOptions: {
                             onSuccess: () => {
                                 toast.success("Logged in successfully");
-                                router.push("/");
+                                router.push("/welcome");
                             },
                             onError: (error) => {
                                 toast.error(error.error.message);
@@ -45,44 +46,87 @@ export default function loginPage() {
         }
     
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Login</CardTitle>
-                <CardDescription>Login in to get started right away!</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FieldGroup className="gap-y-4">
-                        <Controller name ="email" control={form.control} render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Email</FieldLabel>
-                                <Input aria-invalid = {fieldState.invalid} placeholder="john@doe.com" type="email" {...field} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
-                        <Controller name ="password" control={form.control} render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Password</FieldLabel>
-                                <Input aria-invalid = {fieldState.invalid} placeholder="*********" type="password" {...field} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <Card className="w-full max-w-md border-border/60">
+        
+        <CardHeader className="space-y-2">
+            <CardTitle className="text-2xl font-semibold tracking-tight">
+            Welcome back
+            </CardTitle>
+            <CardDescription>
+            Sign in to continue writing.
+            </CardDescription>
+        </CardHeader>
 
-                        <Button disabled = {isPending}>{isPending ? (
-                            <>
-                                <Loader2 className="size-4 animate-spin" />
-                                <span>Loading...</span>
-                            </>
-                        ) : (
-                            <span>Log In</span>
-                        )}</Button>
-                    </FieldGroup>
-                </form>
-            </CardContent>
+        <CardContent>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            
+            <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                <Field>
+                    <FieldLabel>Email</FieldLabel>
+                    <Input
+                    type="email"
+                    placeholder="john@doe.com"
+                    aria-invalid={fieldState.invalid}
+                    {...field}
+                    />
+                    {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                    )}
+                </Field>
+                )}
+            />
+
+            <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                <Field>
+                    <FieldLabel>Password</FieldLabel>
+                    <Input
+                    type="password"
+                    placeholder="••••••••"
+                    aria-invalid={fieldState.invalid}
+                    {...field}
+                    />
+                    {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                    )}
+                </Field>
+                )}
+            />
+
+            <Button className="w-full" disabled={isPending}>
+                {isPending ? (
+                <>
+                    <Loader2 className="size-4 animate-spin mr-2" />
+                    Signing in...
+                </>
+                ) : (
+                "Sign in"
+                )}
+            </Button>
+
+            </form>
+
+            <div className="mt-8 border-t border-border pt-6 text-center space-y-2">
+                <p className="text-sm text-muted-foreground">
+                    New to Stackframe?
+                </p>
+                <Link
+                    href="/auth/sign-up"
+                    className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                    >
+                    Create an account →
+                </Link>
+            </div>
+
+        </CardContent>
         </Card>
-    )
+    </div>
+    );
+
 }

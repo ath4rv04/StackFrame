@@ -14,7 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-export default function signUpPage() {
+export default function SignUpPage() {
     const router = useRouter();
     const [isPending, startTransition] = useTransition()
     const form = useForm({
@@ -37,7 +37,7 @@ export default function signUpPage() {
             fetchOptions: {
                             onSuccess: () => {
                                 toast.success("Account created successfully");
-                                router.push("/");
+                                router.push("/welcome");
                             },
                             onError: (error) => {
                                 toast.error(error.error.message);
@@ -48,53 +48,104 @@ export default function signUpPage() {
     }
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Sign Up</CardTitle>
-                <CardDescription>Create an account to get started</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FieldGroup className="gap-y-4">
-                        <Controller name ="name" control={form.control} render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Full Name</FieldLabel>
-                                <Input aria-invalid = {fieldState.invalid} placeholder="John Doe" {...field} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
-                        <Controller name ="email" control={form.control} render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Email</FieldLabel>
-                                <Input aria-invalid = {fieldState.invalid} placeholder="john@doe.com" type="email" {...field} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
-                        <Controller name ="password" control={form.control} render = {({field, fieldState}) => (
-                            <Field>
-                                <FieldLabel>Password</FieldLabel>
-                                <Input aria-invalid = {fieldState.invalid} placeholder="*********" type="password" {...field} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )} />
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <Card className="w-full max-w-md border-border/60">
+        
+        <CardHeader className="space-y-2">
+            <CardTitle className="text-2xl font-semibold tracking-tight">
+            Create your account
+            </CardTitle>
+            <CardDescription>
+            Start writing on Stackframe.
+            </CardDescription>
+        </CardHeader>
 
-                        <Button disabled = {isPending}>{isPending ? (
-                            <>
-                                <Loader2 className="size-4 animate-spin" />
-                                <span>Loading...</span>
-                            </>
-                        ) : (
-                            <span>Sign Up</span>
-                        )}</Button>
-                    </FieldGroup>
-                </form>
-            </CardContent>
+        <CardContent>
+            <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+            >
+            
+            <Controller
+                name="name"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                <Field>
+                    <FieldLabel>Full name</FieldLabel>
+                    <Input
+                    placeholder="John Doe"
+                    aria-invalid={fieldState.invalid}
+                    {...field}
+                    />
+                    {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                    )}
+                </Field>
+                )}
+            />
+
+            <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                <Field>
+                    <FieldLabel>Email</FieldLabel>
+                    <Input
+                    type="email"
+                    placeholder="john@doe.com"
+                    aria-invalid={fieldState.invalid}
+                    {...field}
+                    />
+                    {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                    )}
+                </Field>
+                )}
+            />
+
+            <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                <Field>
+                    <FieldLabel>Password</FieldLabel>
+                    <Input
+                    type="password"
+                    placeholder="••••••••"
+                    aria-invalid={fieldState.invalid}
+                    {...field}
+                    />
+                    {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                    )}
+                </Field>
+                )}
+            />
+
+            <Button className="w-full" disabled={isPending}>
+                {isPending ? (
+                <>
+                    <Loader2 className="size-4 animate-spin mr-2" />
+                    Creating account...
+                </>
+                ) : (
+                "Create account"
+                )}
+            </Button>
+
+            <p className="text-sm text-muted-foreground text-center">
+                Already have an account?{" "}
+                <a
+                href="/auth/login"
+                className="text-primary hover:underline"
+                >
+                Sign in
+                </a>
+            </p>
+
+            </form>
+        </CardContent>
         </Card>
-    )
+    </div>
+    );
 }

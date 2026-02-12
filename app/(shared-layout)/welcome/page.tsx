@@ -10,16 +10,63 @@ import { CalendarDays, ArrowRight } from "lucide-react";
 export default function Home() {
   const posts = useQuery(api.posts.getPost);
 
-  if (!posts) return <div className="p-20 text-center text-muted-foreground">Loading your journal...</div>;
+  if (!posts) return (
+      <div className="py-24 text-center text-muted-foreground">
+        Loading entries...
+      </div>
+    );
 
+    if (posts.length === 0) {
   return (
-    <main className="max-w-7xl mx-auto px-6 py-16">
-      <header className="mb-16 space-y-4">
-        <h1 className="text-5xl font-black tracking-tight uppercase">The Archive</h1>
-        <p className="text-muted-foreground text-lg">Detailed writeups on Cyber Security & Forensics.</p>
+    <div className="py-24 space-y-16">
+      
+      <header className="space-y-6 max-w-2xl">
+        <h1 className="text-4xl font-semibold tracking-tight">
+          Structured thinking for developers.
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          Stackframe explores code, systems, and ideas —
+          built with Next.js and curiosity.
+        </p>
       </header>
 
-      <div className="flex gap-2 mb-10 overflow-x-auto pb-2 no-scrollbar">
+      <div className="max-w-xl mx-auto">
+        <div className="rounded-2xl border border-border/40 p-10 text-center space-y-4">
+
+        <p className="text-lg font-medium">
+          No articles yet.
+        </p>
+        <p className="text-muted-foreground text-sm">
+          Start writing your first structured thought.
+        </p>
+
+        <Link
+          href="/create"
+          className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+        >
+          Create your first post →
+        </Link>
+      </div>
+    </div>
+    </div>
+  );
+}
+
+  return (
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 space-y-16">
+      
+      {/* Hero */}
+      <header className="space-y-6 max-w-3xl">
+        <h1 className="text-4xl font-semibold tracking-tight">
+          Structured thinking for developers.
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          Stackframe explores code, systems, and ideas —
+          built with Next.js and curiosity.
+        </p>
+      </header>
+
+      {/* <div className="flex gap-2 mb-10 overflow-x-auto pb-2 no-scrollbar">
       {["All", "Cyber Security", "Java", "Projects"].map((tag) => (
         <button 
           key={tag}
@@ -28,7 +75,7 @@ export default function Home() {
           {tag}
         </button>
       ))}
-    </div>
+    </div> */}
       <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
         {posts.map((post, index) => {
           const isFeatured = index === 0;
@@ -84,6 +131,6 @@ export default function Home() {
           );
         })}
       </div>
-    </main>
+    </div>
   );
 }
