@@ -8,10 +8,18 @@ import { fetchQuery } from "convex/nextjs";
 import { resolve } from "path";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-static' //static rendering
 
 export const revalidate = 30; //revalidating time
+ 
+export const metadata: Metadata = {
+  title: "Blog | Next.js 16 Tutorial",
+  description: "Read our latest articles and insights",
+  category: "web development",
+  authors: [{name: "Atharv Shawrikar"}],
+}; //static metadata
 
 export default function blog() {
     

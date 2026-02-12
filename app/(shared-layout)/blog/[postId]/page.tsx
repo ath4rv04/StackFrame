@@ -5,6 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { ArrowLeft } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,6 +14,24 @@ interface postIdRouteProps {
         postId: Id<"posts">;
     }>;
 }
+
+//dynamic metadata
+export async function generateMetadata({ params } : postIdRouteProps) : Promise<Metadata> {
+    const { postId } = await params;
+
+    const post = await fetchQuery(api.posts.getPostById, { postId : postId });
+
+    if(!post) {
+        return {
+            title: "Post not found",
+        };
+    }
+
+    return {
+        title: post.body,
+        description: post.title,
+    }
+} //next js allows you to both create static metadata and dynamic metadata
 
 export default async function PostIdRoute({params} : postIdRouteProps) {
     const { postId } = await params;
