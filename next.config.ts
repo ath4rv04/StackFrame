@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  cacheComponents: true,
   images: {
     remotePatterns: [ 
       {
@@ -12,7 +11,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'flippant-sockeye-771.convex.cloud',
+        hostname: 'majestic-pheasant-482.convex.cloud',
         port: '',
       },
     ],
